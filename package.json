@@ -1,0 +1,28 @@
+{
+  "name": "to-do-app-nuxt",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "startt": "nuxt start",
+    "start": "nodemon backend/server.js",
+    "generate": "nuxt generate",
+    "server": "nodemon backend/server.js",
+    "conc": "concurrently \"cd server && npm run start\" \"npm run start\""
+  },
+  "dependencies": {
+    "apollo-server": "^2.19.2",
+    "axios": "^0.21.1",
+    "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "mongoose": "^5.11.14",
+    "nodemon": "^2.0.7",
+    "nuxt": "^2.14.12"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.3"
+  }
+}
