@@ -6,21 +6,25 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "startt": "nuxt start",
-    "start": "nodemon backend/server.js",
+    "start": "nodemon backend/index.js",
     "generate": "nuxt generate",
     "server": "nodemon backend/server.js",
     "conc": "concurrently \"cd server && npm run start\" \"npm run start\""
   },
   "dependencies": {
-    "apollo-server": "^2.19.2",
+    "@nuxtjs/apollo": "^4.0.1-rc.5",
+    "@nuxtjs/auth-next": "5.0.0-1611574754.9020f2a",
+    "@nuxtjs/axios": "^5.13.0",
     "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
+    "graphql-tag": "^2.10.1",
     "mongoose": "^5.11.14",
     "nodemon": "^2.0.7",
-    "nuxt": "^2.14.12"
+    "nuxt": "^2.14.12",
+    "vue-apollo": "^3.0.5"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3"

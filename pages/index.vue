@@ -12,8 +12,15 @@
 
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Application</v-toolbar-title>
+<v-spacer/>
+      <div v-if="$auth.loggedIn">
+        {{$auth.user.email}}
+        <v-btn>Logout</v-btn>
+      </div>
+      <div v-else>
+        <v-btn text to="/login">Login</v-btn>
+         <v-btn text to="/register">Register</v-btn>
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -21,7 +28,7 @@
       fixed
       temporary
     >
-   
+
       <!--  -->
     </v-navigation-drawer>
 
@@ -54,13 +61,22 @@
 
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-import EventService from '../backend/EventService'
+import gql from 'graphql-tag'
+import TODO_CREATE from '../graphql/TodoCreate.gql'
+import TODO_DELETE from '../graphql/TodoDelete.gql'
+import TODO_UPDATE from '../graphql/TodoUpdate.gql'
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  auth: false,
+  apollo: {
+    todos: gql`
+      query getTodos{
+        todos{
+          id
+          title
+          completed
+        }
+      }
+    `,
   },
   data(){
     return{
@@ -69,19 +85,15 @@ export default {
       newTodo: '',
     }
   },
-  computed:{
-    test(){
-      this.$store.state.test
-    }
-  },
-  created(){
-    console.log('Created Triggered');
-    this.getTodosData()
-  },
   methods:{
     async deleteTodo(todo){
       try{
-        await EventService.deleteTodo(todo)
+        await this.$apollo.mutate({
+          mutation: TODO_DELETE,
+          variables:{
+            id:todo.id
+          }
+        })
         //locally remove from array
         this.todos.splice(this.todos.indexOf(todo),1)
       }
@@ -90,25 +102,34 @@ export default {
       }
     },
     async createNewTodo(){
-      const newTodo = {
-        title: this.newTodo,
-        completed: false
-      }
+      const title = this.newTodo
       this.newTodo =''
       try{
-        console.log('start');
-        await EventService.postNewTodo(newTodo)
-        console.log('end');
-        this.todos.unshift(newTodo)
-        //locally push to array
+        const createdTodo = await this.$apollo.mutate({
+          mutation: TODO_CREATE,
+          variables:{
+            title
+          }
+        })
+        // I stil need to get back the created todo so the _id field is set in case you want to delete beffore refeshing the page!!
+        console.log(createdTodo);
+        this.todos.unshift({title: title, completed: false})
       }
       catch(e){
         console.log(e);
       }
     },
     async changeCompletedStatus(todo){
+      console.log(typeof todo.completed);
       try{
-        await EventService.putTodoStatus({id:todo._id, currentStatus: todo.completed})
+        const updatedTodo = await this.$apollo.mutate({
+          mutation: TODO_UPDATE,
+          variables:{
+            status: todo.completed,
+            id:todo.id  
+          }
+        })
+        console.log(updatedTodo);
       }
       catch(e){
         console.log(e);
@@ -117,17 +138,17 @@ export default {
       }
     },
     async getTodosData(){
-      try{
-        const data = await EventService.getTodos()
-        this.todos = data
-      }
-      catch(e){
-        console.log(e);
-      }
-    }
+    //   try{
+    //     const data = await EventService.getTodos()
+    //     this.todos = data
+    //   }
+    //   catch(e){
+    //     console.log(e);
+    //   }
+    // }
+  }
   }
 }
-
 </script>
 <style scoped>
 .todoList{
