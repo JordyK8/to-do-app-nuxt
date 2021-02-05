@@ -22,6 +22,7 @@ export default {
                     }
                 })
                 this.$store.commit('login', user)
+                this.$router.push('/')
             }catch(e){
                 console.log(e);
             }

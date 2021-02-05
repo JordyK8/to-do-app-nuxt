@@ -54,12 +54,9 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/auth-next',
-    '@nuxtjs/axios'
+  
   ],
-  axios: {
-    baseUrl: 'http://localhost:4000/graphql'
-  },
-
+ 
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

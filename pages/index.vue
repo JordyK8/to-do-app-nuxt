@@ -2,6 +2,8 @@
   <v-app id="inspire">
 
     <v-main class="black lighten-2">
+      <div v-if="user.id">
+
       <div>
         <v-text-field
       v-model="newTodo"
@@ -22,6 +24,10 @@
             </v-col>
           <v-col><v-icon @click="deleteTodo(todo)" class="delete-icon"  color="red" >mdi-delete</v-icon></v-col>
         </v-row>
+      </div>
+      <div v-else>
+        <h1>Please login to see your Todo's</h1>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -38,17 +44,17 @@ import GET_TODOS_USER from '../graphql/TodoGet.gql'
 export default {
   auth: false,
  async created(){
-   try{
-   if(this.$store.state.user.id){
-     const ownerId = this.$store.state.user.id
-      const todos = await this.$apollo.query({
-        query: GET_TODOS_USER,
-        variables:{
-          ownerId
-        }
-      })
-      console.log(todos.data.todos);
-      this.todos = todos.data.todos
+   try {
+    if (this.$store.state.user.id){
+        const ownerId = this.$store.state.user.id
+        const todos = await this.$apollo.query({
+          query: GET_TODOS_USER,
+          variables:{
+            ownerId
+          }
+        })
+        console.log(todos.data.todos);
+        this.todos = todos.data.todos
 
    }
    }catch(e){
@@ -62,37 +68,47 @@ export default {
       newTodo: '',
     }
   },
+  computed:{
+    user(){
+      return this.$store.state.user
+    }
+  },
   methods:{
     async deleteTodo(todo){
+      const ownerId = this.$store.state.user.id
       try{
         await this.$apollo.mutate({
           mutation: TODO_DELETE,
           variables:{
+            ownerId,
             id:todo.id
           }
         })
         //locally remove from array
         this.todos.splice(this.todos.indexOf(todo),1)
       }
-      catch(e){
+      catch(e) {
         console.log(e);
       }
     },
-    async createNewTodo(){
+    
+    async createNewTodo() {
       const title = this.newTodo
+      //Gets the ID of the current logedin user
+      const ownerId = this.$store.state.user.id
       this.newTodo =''
       try{
         const createdTodo = await this.$apollo.mutate({
           mutation: TODO_CREATE,
           variables:{
-            title
+            title,
+            ownerId
           }
         })
-        // I stil need to get back the created todo so the _id field is set in case you want to delete beffore refeshing the page!!
-        console.log(createdTodo);
-        this.todos.unshift({title: title, completed: false})
+        const createdTodoFromDB = createdTodo.data.createTodo
+        this.todos.unshift(createdTodoFromDB)
       }
-      catch(e){
+      catch(e) {
         console.log(e);
       }
     },
@@ -113,18 +129,8 @@ export default {
         //revert local change if error
         todo.completed != todo.completed
       }
+    }
     },
-    async getTodosData(){
-    //   try{
-    //     const data = await EventService.getTodos()
-    //     this.todos = data
-    //   }
-    //   catch(e){
-    //     console.log(e);
-    //   }
-    // }
-  }
-  }
 }
 </script>
 <style scoped>

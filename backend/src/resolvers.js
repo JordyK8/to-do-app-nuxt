@@ -1,5 +1,10 @@
+import { Error } from 'mongoose';
 import { Todo } from './models/Todo'
 import { User } from './models/User'
+import bcrypt from 'bcrypt'
+const saltRounds = 8
+
+
 export const resolvers = {
     Query: {
         allTodos: () => Todo.find(),
@@ -20,48 +25,52 @@ export const resolvers = {
             try {
                 await newTodo.save()
                 console.log(newTodo);
-                return newTodo
             } catch (e) {
                 console.log(e);
-             }
+            }
+            return newTodo
         },
-        createUser: async(_, { email, password }) => {
+        
+        createUser: async (_, { email, password }) => {
             const newUser = new User({ email, password, admin: true })
             try {
+                const salt = await bcrypt.genSalt(saltRounds)
+                newUser.password = await bcrypt.hash(password, salt)
                 await newUser.save()
                 console.log(newUser);
-                return newUser
             } catch (e) {
                 console.log(e);
-             }
+            }
+            return newUser
         },
+
         deleteTodo: async (_, { id }) => {
             try {
                 const deletedTodo = await Todo.findOneAndDelete({ _id: id })
                 console.log(deletedTodo);
-                return deletedTodo
             } catch (e) {
                 console.log(e);
             }
+            return deletedTodo
         },
         updateTodo: async (_, { id, status }) => {
             const filter = {_id: id}
             try {
                 const todoToUpdate = await Todo.findOneAndUpdate(filter, {$set:{ completed: status }},{new: true})
-                return todoToUpdate
             } catch (e) {
                 console.log(e);
             }
+            return todoToUpdate
         },
         login: async (_, { email, password }) => {
+            let user
             try {
-                const user = await User.findOne({ email })
-                console.log(user.password , password);
-                if (user.password === password) { return user }
-                else { return null }
+                user = await User.findOne({ email })
+                if (!await bcrypt.compare(password, user.password)) throw new Error('Login unsuccesfull')
             } catch (e) {
                 console.log(e);
             }
+            return user
         }
 
     }
