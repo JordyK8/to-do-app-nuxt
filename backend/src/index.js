@@ -5,13 +5,19 @@ import { resolvers } from './resolvers'
 import { typeDefs} from './typeDefs'
 
 
+
 const startServer = async() => {
     const app = express()
     
+    
     const server = new ApolloServer({
         typeDefs,
-        resolvers
-    })
+        resolvers,
+        context: ({ req }) => {
+       
+        return req;
+        },
+    });
     
     server.applyMiddleware({ app })
     await mongoose.connect('mongodb://localhost:27017/test2', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })

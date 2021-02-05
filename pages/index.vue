@@ -1,36 +1,5 @@
 <template>
   <v-app id="inspire">
-    <v-system-bar app>
-      <v-spacer></v-spacer>
-
-      <v-icon>mdi-square</v-icon>
-
-      <v-icon>mdi-circle</v-icon>
-
-      <v-icon>mdi-triangle</v-icon>
-    </v-system-bar>
-
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-<v-spacer/>
-      <div v-if="$auth.loggedIn">
-        {{$auth.user.email}}
-        <v-btn>Logout</v-btn>
-      </div>
-      <div v-else>
-        <v-btn text to="/login">Login</v-btn>
-         <v-btn text to="/register">Register</v-btn>
-      </div>
-    </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      temporary
-    >
-
-      <!--  -->
-    </v-navigation-drawer>
 
     <v-main class="black lighten-2">
       <div>
@@ -61,23 +30,31 @@
 
 
 <script>
-import gql from 'graphql-tag'
 import TODO_CREATE from '../graphql/TodoCreate.gql'
 import TODO_DELETE from '../graphql/TodoDelete.gql'
 import TODO_UPDATE from '../graphql/TodoUpdate.gql'
+import GET_TODOS_USER from '../graphql/TodoGet.gql'
+
 export default {
   auth: false,
-  apollo: {
-    todos: gql`
-      query getTodos{
-        todos{
-          id
-          title
-          completed
+ async created(){
+   try{
+   if(this.$store.state.user.id){
+     const ownerId = this.$store.state.user.id
+      const todos = await this.$apollo.query({
+        query: GET_TODOS_USER,
+        variables:{
+          ownerId
         }
-      }
-    `,
-  },
+      })
+      console.log(todos.data.todos);
+      this.todos = todos.data.todos
+
+   }
+   }catch(e){
+     console.log(e);
+   }
+ },
   data(){
     return{
       drawer: null,

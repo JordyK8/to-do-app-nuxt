@@ -31,7 +31,7 @@ export default {
   ],
 
   router: {
-    middleware: ['auth']
+    middleware: ['localAuth']
   },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -56,12 +56,10 @@ export default {
     '@nuxtjs/auth-next',
     '@nuxtjs/axios'
   ],
-  auth: {
-    strategies: {
-      local: {},
-      github:{},
-    }
+  axios: {
+    baseUrl: 'http://localhost:4000/graphql'
   },
+
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

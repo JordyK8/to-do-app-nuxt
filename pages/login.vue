@@ -8,22 +8,26 @@
 
 <script>
 import UserAuthForm from '../components/UserAuthForm'
+import USER from '../graphql/User.gql'
 export default {
     components:{UserAuthForm},
     methods:{
-        async loginUser(loginInfo){
+        async loginUser({email, password}){
             try{
-                let res = this.$auth.loginWith('local',{
-                        data: loginInfo
-                    })
-                console.log(res);
+                const user = await this.$apollo.mutate({
+                    mutation: USER,
+                    variables:{
+                        email,
+                        password
+                    }
+                })
+                this.$store.commit('login', user)
             }catch(e){
                 console.log(e);
             }
             // alert('login')
         }
-    }
-
+    },
 }
 </script>
 

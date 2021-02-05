@@ -1,5 +1,5 @@
-mutation($title: String!) {
-  createTodo(title: $title){
+mutation($title: String!, $ownerId: ID!) {
+  createTodo(title: $title, ownerId: $ownerId){
     id
     title
     completed

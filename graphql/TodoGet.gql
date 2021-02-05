@@ -1,0 +1,7 @@
+query($ownerId: ID!){
+  todos(ownerId:$ownerId){
+    id
+    title
+    completed
+  }
+}
