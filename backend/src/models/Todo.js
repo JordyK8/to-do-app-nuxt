@@ -1,2 +1,9 @@
-import mongoose from 'mongoose'
-export const Todo = mongoose.model("Todo", { title: String, completed: Boolean, ownerId:String })
+import mongoose from 'mongoose';
+
+const Todo = mongoose.model('Todo', {
+  title: String,
+  completed: Boolean,
+  ownerId: String,
+});
+
+export default Todo;

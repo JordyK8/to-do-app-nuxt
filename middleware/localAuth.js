@@ -1,8 +1,5 @@
-export default function ({ route }) {
-    console.log('hi');
-    // if (this.$store.state.user.id) {
-    //     console.log('user logedin');
-    // }
-    
+export default function ({route, store, redirect}) {
+  if (route.path === '/' && !store.state.user.id) {
+    return redirect('/login');
   }
-
+}

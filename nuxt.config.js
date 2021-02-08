@@ -46,17 +46,32 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: "http://localhost:4000/graphql"
-      }
-    }
+        httpEndpoint: "http://localhost:4000/graphql",
+        wsEndpoint: 'ws://localhost:4000/graphql',
+      },
+    },
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/auth-next',
-  
+    'nuxt-socket-io',
   ],
- 
+  io: {
+    sockets: [{
+      name: 'main',
+      url: 'http://localhost:3000',
+      default: true,
+      vuex: {
+        mutations: [{
+          test: 'test',
+        }],
+      },
+      namespaces: {},
+    },
+    { name: 'todos', url: 'http://subdoman1:3000' },
+    ],
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

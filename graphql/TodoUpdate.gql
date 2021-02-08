@@ -3,5 +3,6 @@ mutation($id: ID!, $status: Boolean!) {
     id
     title
     completed
+    
   }
 }

@@ -1,29 +1,36 @@
-import { ApolloServer } from 'apollo-server-express'
-import express from 'express'
-import mongoose from 'mongoose'
-import { resolvers } from './resolvers'
-import { typeDefs} from './typeDefs'
+import { ApolloServer, PubSub } from 'apollo-server-express';
+import { createServer } from 'http';
+import express from 'express';
+import mongoose from 'mongoose';
+import resolvers from './resolvers';
+import typeDefs from './typeDefs';
 
+require('dotenv').config();
 
+const startServer = async () => {
+  const app = express();
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-const startServer = async() => {
-    const app = express()
-    
-    
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers,
-        context: ({ req }) => {
-       
-        return req;
-        },
-    });
-    
-    server.applyMiddleware({ app })
-    await mongoose.connect('mongodb://localhost:27017/test2', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
-    app.listen({ port: 4000 }, () => {
-        console.log(`server running at http://localhost:4000${server.graphqlPath}`);
-    })
-}
+  server.applyMiddleware({ app });
+  await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  });
 
-startServer()
+  // Wat gebeurt hier? Waarom kan in http initieren met ws?
+  // Waar word de apollo server aan gekoppeld nu ?
+
+  const ws = createServer(app);
+  server.installSubscriptionHandlers(ws);
+
+  ws.listen({ port: process.env.PORT }, () => {
+    console.log(`server running at http://localhost:${process.env.PORT + server.graphqlPath}`);
+    console.log(`subscription server running at ws://localhost:${process.env.PORT + server.subscriptionsPath}`);
+  });
+};
+
+startServer();

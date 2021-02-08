@@ -9,13 +9,11 @@
     "start": "nodemon backend/index.js",
     "generate": "nuxt generate",
     "server": "nodemon backend/server.js",
-    "conc": "concurrently \"cd server && npm run start\" \"npm run start\""
+    "conc": "concurrently \"yarn dev\" \"cd backend && yarn start\""
   },
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.1-rc.5",
     "@nuxtjs/auth-next": "5.0.0-1611574754.9020f2a",
-    "@nuxtjs/axios": "^5.13.0",
-    "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -24,6 +22,7 @@
     "mongoose": "^5.11.14",
     "nodemon": "^2.0.7",
     "nuxt": "^2.14.12",
+    "nuxt-socket-io": "^1.1.14",
     "vue-apollo": "^3.0.5"
   },
   "devDependencies": {
