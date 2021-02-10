@@ -18,10 +18,10 @@ const resolvers = {
       subscribe: () => pubsub.asyncIterator([TODO_CREATED]),
     },
     todoUpdated: {
-      subscribe: () => pubsub.asyncIterator(TODO_UPDATED),
+      subscribe: () => pubsub.asyncIterator([TODO_UPDATED]),
     },
     todoDeleted: {
-      subscribe: () => pubsub.asyncIterator(TODO_DELETED),
+      subscribe: () => pubsub.asyncIterator([TODO_DELETED]),
     },
   },
 
@@ -36,7 +36,6 @@ const resolvers = {
       const newTodo = new Todo({ title, completed: false, ownerId });
       await newTodo.save();
       pubsub.publish(TODO_CREATED, { todoCreated: newTodo });
-      return newTodo;
     },
 
     createUser: async (_, { email, password }) => {
@@ -47,10 +46,16 @@ const resolvers = {
       return newUser;
     },
 
-    deleteTodo: async (_, { id }) => Todo.findOneAndDelete({ _id: id }),
+    deleteTodo: async (_, { id }) => {
+      const deletedTodo = await Todo.findOneAndDelete({ _id: id });
+      pubsub.publish(TODO_DELETED, { todoDeleted: deletedTodo });
+    },
 
-    updateTodo: async (_, { id, status }) => Todo.findOneAndUpdate({
-      _id: id }, { $set: { completed: status } }, { new: true }),
+    updateTodo: async (_, { id, status }) => {
+      const updatedTodo = Todo.findOneAndUpdate({ _id: id },
+        { $set: { completed: status } }, { new: true });
+      pubsub.publish(TODO_UPDATED, { todoUpdated: updatedTodo });
+    },
 
     login: async (_, { email, password }) => {
       const user = await User.findOne({ email });

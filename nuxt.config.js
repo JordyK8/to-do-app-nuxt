@@ -9,7 +9,7 @@ export default {
     titleTemplate: '%s - to-do-app-nuxt',
     title: 'to-do-app-nuxt',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     meta: [
       { charset: 'utf-8' },
@@ -18,7 +18,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -27,7 +27,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    
+
   ],
 
   router: {
@@ -41,12 +41,12 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
   ],
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: "http://localhost:4000/graphql",
+        httpEndpoint: 'http://localhost:4000/graphql',
         wsEndpoint: 'ws://localhost:4000/graphql',
       },
     },
@@ -55,23 +55,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/auth-next',
-    'nuxt-socket-io',
   ],
-  io: {
-    sockets: [{
-      name: 'main',
-      url: 'http://localhost:3000',
-      default: true,
-      vuex: {
-        mutations: [{
-          test: 'test',
-        }],
-      },
-      namespaces: {},
-    },
-    { name: 'todos', url: 'http://subdoman1:3000' },
-    ],
-  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -87,12 +71,12 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3
-        }
-      }
-    }
+        },
+      },
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
-}
+  },
+};

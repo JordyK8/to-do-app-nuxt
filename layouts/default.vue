@@ -29,7 +29,9 @@
 </template>
 
 <script>
+import error from './error.vue';
 export default {
+  components: { error },
   computed: {
     user() {
       return this.$store.state.user ? this.$store.state.user : 'Please login first!';

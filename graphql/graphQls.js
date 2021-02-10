@@ -45,7 +45,6 @@ const qqls = {
     mutation($email: String!, $password: String!){
       login(email:$email ,password: $password){
         email
-        password
         id
         admin
       }
@@ -61,6 +60,37 @@ const qqls = {
       }
     }
   `,
+  subscriptionTodoCreated: gql`
+    subscription {
+    todoCreated {
+      id
+      title
+      ownerId
+      completed
+    }
+  }
+`,
+  subscriptionTodoDeleted: gql`
+    subscription {
+    todoDeleted {
+      id
+      title
+      ownerId
+      completed
+    }
+  }
+`,
+  subscriptionTodoUodated: gql`
+    subscription {
+    todoUpdated {
+      id
+      title
+      ownerId
+      completed
+    }
+  }
+`,
+
 };
 
 export default qqls;

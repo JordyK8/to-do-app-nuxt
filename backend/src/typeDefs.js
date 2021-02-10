@@ -4,8 +4,8 @@ const typeDefs = gql`
 
   type Subscription {
     todoCreated: Todo!
-    todoUpdated: Todo!
     todoDeleted: Todo!
+    todoUpdated: Todo!
   }
 
   type Query {
@@ -29,14 +29,14 @@ const typeDefs = gql`
   type Mutation {
     login(email: String!, password:String!): User
 
-    createTodo(title: String!, ownerId:ID!): Todo!
+    createTodo(title: String!, ownerId:ID!): Todo
     createUser(email: String!, password: String!): User!
         
-    deleteTodo(id: ID!): Todo!
+    deleteTodo(id: ID!): Todo
     deleteUser(id: ID!): User!
 
-    updateTodo(id: ID!,status:Boolean!): Todo!
-    updateUser(id: ID!, password: String!, newPassword: String!): Todo!
+    updateTodo(id: ID!,status:Boolean!): Todo
+    updateUser(id: ID!, password: String!, newPassword: String!): User!
   }
 
 `;
